@@ -1,0 +1,53 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>JS基础练习--队列和排序</title>
+    <style>
+        #queue {
+            align-items: flex-end;
+            flex-direction: row;
+        }
+        
+        .element {
+            background: #228822;
+            display: inline-block;
+            width: 20px;
+        }
+    </style>
+</head>
+
+<body>
+    <input type="text" placeholder="请输入数字">
+    <button id="input-left">left-input</button>
+    <button id="input-right">right-input</button>
+    <button id="output-left"> left-output</button>
+    <button id="inputLeft-right">right-output</button>
+    <div id="queue">
+    </div>
+    <script>
+        function init() {
+
+        }
+
+        function bindEvent() {
+            var inputLeft = document.getElementById("input-left");
+        }
+
+        function addElement(val, dir) {
+            var ele = document.createElement("div");
+            ele.style.height = val + "px";
+            var queue = document.getElementById("queue");
+            var eleList = queue.getElementsByClassName("element");
+
+            if (dir == "right" || eleList.length == 0) {
+                queue.appendChild(ele);
+            } else {
+
+            }
+        }
+    </script>
+</body>
+
+</html>
