@@ -6,47 +6,124 @@
     <title>JS基础练习--队列和排序</title>
     <style>
         #queue {
+            display: flex;
             align-items: flex-end;
             flex-direction: row;
+            height:150px;
+            border: 1px solid #000;
+            margin-top:20px;
         }
         
         .element {
             background: #228822;
             display: inline-block;
             width: 20px;
+            margin-left: 10px
         }
     </style>
 </head>
 
 <body>
-    <input type="text" placeholder="请输入数字">
-    <button id="input-left">left-input</button>
-    <button id="input-right">right-input</button>
-    <button id="output-left"> left-output</button>
-    <button id="inputLeft-right">right-output</button>
+    <input id="val" type="text" placeholder="请输入数字"/>
+    <button id="input-left" dataDir="left">left-input</button>
+    <button id="input-right" dataDir="right">right-input</button>
+    <button id="output-left" dataDir="left"> left-output</button>
+    <button id="output-right" dataDir="right">right-output</button>
+    <button id="sort" >BubleSort</button>
     <div id="queue">
     </div>
     <script>
         function init() {
+            bindEvent();
 
         }
 
         function bindEvent() {
             var inputLeft = document.getElementById("input-left");
+            var inputRight = document.getElementById("input-right");
+            var outputLeft = document.getElementById("output-left");
+            var outputRight = document.getElementById("output-right");
+            var sortBtn = document.getElementById("sort");
+            var val = document.getElementById("val").value;
+        
+            inputLeft.onclick = addElement;
+            inputRight.onclick = addElement;
+            outputLeft.onclick = removeElement;
+            outputRight.onclick = removeElement;
+            sortBtn.onclick = BubleSort;
         }
 
-        function addElement(val, dir) {
+        function addElement() {
+            var input = document.getElementById("val")
+            var val = input.value;
+            input.value = "";
+            val = parseInt(val);
+            if(isNaN(val) || val < 10 || val > 100){
+                alert("必须输入10--100的整数");
+                return;
+            }
+            var dir = this.getAttribute("dataDir");
             var ele = document.createElement("div");
+            ele.setAttribute("class","element");
             ele.style.height = val + "px";
             var queue = document.getElementById("queue");
             var eleList = queue.getElementsByClassName("element");
 
-            if (dir == "right" || eleList.length == 0) {
+            if (dir == "right" || eleList==null || eleList.length == 0) {
                 queue.appendChild(ele);
             } else {
+                queue.insertBefore(ele,eleList[0]);
+            }
+        }
+        function removeElement(){
+            var dir = this.getAttribute("dataDir");
+            var queue = document.getElementById("queue");
+            var eleList =  queue.getElementsByClassName("element");
+            if(eleList == null || eleList.length == 0 ){
+                alert("队列已空。。。");
+                return;
+            }
+            if(dir == "left"){
+                eleList[0].remove();
+            }else{
+                var len = eleList.length;
+                eleList[len-1].remove();
+            }
+        }
+        function BubleSort(){
+            var state = [];
+            var eleList = document.getElementsByClassName("element");
+            var queue = document.getElementById("queue");
+            for(var i = 0; i < eleList.length;i++){
+                for(var j = 0;j < eleList.length-1-i;j++ ){
+                    if(parseInt(eleList[j].style.height) > parseInt(eleList[j+1].style.height)){
+                        queue.insertBefore(eleList[j+1],eleList[j]);
+                        state.push(Array.prototype.slice.call(eleList));
+                        // var temp = eleList[j];
+                        // eleList[j] = eleList[j+1];
+                        // eleList[j+1] = temp;
+
+                    }
+                }
+            }
+            console.info(eleList);
+        }
+        function show(){
+            var count = 0;
+            
+            var inter = setInterval(render,500);
+            function render(){
+                if(count = state.length){
+                    clearInterval(inter);
+                }
+                var queue = document.getElementById("queue");
+                queue.innerHTML = "";
+        
 
             }
         }
+        init();
+
     </script>
 </body>
 
