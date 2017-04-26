@@ -1,0 +1,110 @@
+<!DOCTYPE>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>表单（三）联动</title>
+    <style>
+        .content {
+            width: 600px;
+            height: 200px;
+            border: 1px solid #000000;
+            border-radius: 50px;
+            margin: 50px auto;
+        }
+        
+        .content-career {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px auto
+        }
+        
+        .career {
+            /*margin: 20px 0 20px 40px;*/
+            /*width: 100px;*/
+            /*display: inline-block*/
+        }
+        
+        .content-detail {
+            margin: 20px;
+            display: flex;
+            justify-content: center
+        }
+    </style>
+</head>
+
+<body>
+    <div class="content">
+        <div class="content-career">
+            <div class="career"> <input type="radio" name="career" value="stud" checked id="stud">
+                <label for="stud">在校生</label>
+            </div>
+            <div class="career"> <input type="radio" name="career" value="woker" id="worker">
+                <label for="worker">非在校生</label>
+            </div>
+
+        </div>
+        <div class="content-detail">
+            <div class="detail" id="school" style="display:block">
+                <label for="place">地区:</label><select id="place">
+                    <option id="option1">北京</option>
+                    <option id="option2">上海</option>
+                    <option id="option3">广州</option>
+                </select>
+                <select id="schoolName" style="width:150px">
+                    <option>北京邮电大学</option>
+                    <option>北京大学</option>
+                    <option>清华大学</option>
+                </select>
+
+            </div>
+            <div class="detail" id="company" style="display:none">
+                <label for="my-company">工作单位:</label><input type="text" id="my-company">
+            </div>
+        </div>
+    </div>
+    <script>
+        function bindEvent() {
+            var radioStd = document.getElementById("stud");
+            var radioWorker = document.getElementById("worker");
+            var school = document.getElementById("school");
+            var company = document.getElementById("company");
+            var place = document.getElementById("place");
+            var schoolName = document.getElementById("schoolName")
+
+            radioStd.onclick = function() {
+                school.style.display = "block";
+                company.style.display = "none";
+            }
+            radioWorker.onclick = function() {
+                school.style.display = "none";
+                company.style.display = "block";
+            }
+            place.onchange = function() {
+                var placeSchool = {
+                    option1: ["北京邮电大学", "北京大学", "北京航空航天大学", "北影"],
+                    option2: ["复旦大学", "上海交通大学", "上海大学"],
+                    option3: ["厦门大学", "哈哈school"]
+                }
+                console.log(this.options[this.selectedIndex].id);
+                var optionPlace = this.options[this.selectedIndex].id;
+
+                var schoolStr = "";
+                for (var i = 0; i < placeSchool[optionPlace].length; i++) {
+                    schoolStr = schoolStr + "<option>" + placeSchool[optionPlace][i] + "</option>"
+                }
+                schoolName.innerHTML = schoolStr;
+
+
+
+            }
+        }
+
+        function init() {
+            bindEvent();
+        }
+        init();
+    </script>
+</body>
+
+</html>

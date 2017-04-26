@@ -9,32 +9,34 @@
             display: flex;
             align-items: flex-end;
             flex-direction: row;
-            height:150px;
+            height: 150px;
             border: 1px solid #000;
-            margin-top:20px;
+            margin-top: 20px;
         }
         
         .element {
             background: #228822;
             display: inline-block;
-            width: 20px;
+            width: 30px;
             margin-left: 10px
         }
     </style>
 </head>
 
 <body>
-    <input id="val" type="text" placeholder="请输入数字"/>
+    <input id="val" type="text" placeholder="请输入数字" />
     <button id="input-left" dataDir="left">left-input</button>
     <button id="input-right" dataDir="right">right-input</button>
     <button id="output-left" dataDir="left"> left-output</button>
     <button id="output-right" dataDir="right">right-output</button>
-    <button id="sort" >BubleSort</button>
+    <button id="sort">BubleSort</button>
     <div id="queue">
     </div>
     <script>
         function init() {
             bindEvent();
+            var stack = BubleSort();
+            show(stack);
 
         }
 
@@ -45,7 +47,7 @@
             var outputRight = document.getElementById("output-right");
             var sortBtn = document.getElementById("sort");
             var val = document.getElementById("val").value;
-        
+
             inputLeft.onclick = addElement;
             inputRight.onclick = addElement;
             outputLeft.onclick = removeElement;
@@ -58,46 +60,48 @@
             var val = input.value;
             input.value = "";
             val = parseInt(val);
-            if(isNaN(val) || val < 10 || val > 100){
+            if (isNaN(val) || val < 10 || val > 100) {
                 alert("必须输入10--100的整数");
                 return;
             }
             var dir = this.getAttribute("dataDir");
             var ele = document.createElement("div");
-            ele.setAttribute("class","element");
+            ele.setAttribute("class", "element");
             ele.style.height = val + "px";
             var queue = document.getElementById("queue");
             var eleList = queue.getElementsByClassName("element");
 
-            if (dir == "right" || eleList==null || eleList.length == 0) {
+            if (dir == "right" || eleList == null || eleList.length == 0) {
                 queue.appendChild(ele);
             } else {
-                queue.insertBefore(ele,eleList[0]);
+                queue.insertBefore(ele, eleList[0]);
             }
         }
-        function removeElement(){
+
+        function removeElement() {
             var dir = this.getAttribute("dataDir");
             var queue = document.getElementById("queue");
-            var eleList =  queue.getElementsByClassName("element");
-            if(eleList == null || eleList.length == 0 ){
+            var eleList = queue.getElementsByClassName("element");
+            if (eleList == null || eleList.length == 0) {
                 alert("队列已空。。。");
                 return;
             }
-            if(dir == "left"){
+            if (dir == "left") {
                 eleList[0].remove();
-            }else{
+            } else {
                 var len = eleList.length;
-                eleList[len-1].remove();
+                eleList[len - 1].remove();
             }
         }
-        function BubleSort(){
+
+        function BubleSort() {
             var state = [];
             var eleList = document.getElementsByClassName("element");
             var queue = document.getElementById("queue");
-            for(var i = 0; i < eleList.length;i++){
-                for(var j = 0;j < eleList.length-1-i;j++ ){
-                    if(parseInt(eleList[j].style.height) > parseInt(eleList[j+1].style.height)){
-                        queue.insertBefore(eleList[j+1],eleList[j]);
+            for (var i = 0; i < eleList.length; i++) {
+                for (var j = 0; j < eleList.length - 1 - i; j++) {
+                    if (parseInt(eleList[j].style.height) > parseInt(eleList[j + 1].style.height)) {
+                        queue.insertBefore(eleList[j + 1], eleList[j]);
                         state.push(Array.prototype.slice.call(eleList));
                         // var temp = eleList[j];
                         // eleList[j] = eleList[j+1];
@@ -106,24 +110,67 @@
                     }
                 }
             }
+            // show(state)
             console.info(eleList);
+            return state;
         }
-        function show(){
-            var count = 0;
-            
-            var inter = setInterval(render,500);
-            function render(){
-                if(count = state.length){
-                    clearInterval(inter);
-                }
-                var queue = document.getElementById("queue");
-                queue.innerHTML = "";
-        
 
+        function show(state) {
+            var count = 0;
+            console.log(state.length);
+            var inter = setInterval(render, 500);
+            var queue = document.getElementById("queue");
+
+            function render() {
+                if (count == state.length) {
+                    clearInterval(inter);
+                    return;
+                }
+                queue.innerHTML = "";
+                console.info(state);
+                console.log(count);
+                for (var i = 0; i < state[count].length; i++) {
+                    queue.appendChild(state[count][i]);
+                }
+                count++;
             }
         }
-        init();
 
+        function quickSort() {
+            var eleList = document.getElementsByClassName("element");
+            var stack = [];
+            var eleArray = Array.prototype.slice.call(eleList);
+            sort(0, eleArray.length - 1);
+            return stack;
+
+            function sort(start, end) {
+                if (start < end) {
+                    var mid = backSort();
+                    sort(start, mid - 1);
+                    sort(mid + 1, end);
+                }
+            }
+
+            function backSort(start, end) {
+                var flag = eleArray[start].style.height;
+                while (start < end) {
+                    while (eleArray[end].style.height > flag) {
+                        end--
+                    }
+                    eleArray[start] = eleArray[end];
+                    stack.push(eleArray);
+                    while (eleArray[start].style.height <= flag) {
+                        start++;
+                    }
+                    eleArray[end] = eleArray[start];
+                    stack.push(eleArray);
+                }
+                eleArray[start].style.height = flag + "px";
+                return start;
+            }
+
+        }
+        init();
     </script>
 </body>
 
